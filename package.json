@@ -1,0 +1,22 @@
+{
+  "name": "authentication-app",
+  "version": "1.0.0",
+  "description": "Learning fitur authentication",
+  "license": "ISC",
+  "author": "Rifaldi Eka",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.23.1"
+  }
+}
