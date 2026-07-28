@@ -1,6 +1,6 @@
 import http from "node:http";
 import { testDatabaseConnection } from "./src/config/dbConfig.js";
-
+import handleRoutes from "./src/routes/authenticationRoutes.js";
 
 const port = process.env.PORT;
 
@@ -8,10 +8,12 @@ async function startServer() {
   try {
     await testDatabaseConnection();
     const server = http.createServer((req, res) => {
-      // beri tau data apa yang diterima beserta status code nya
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      // akhiri proses
-      res.end("Hello Node Js");
+      const handleAuthRoutes = handleRoutes(req, res);
+
+      if (handleAuthRoutes) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Route tidak ditemukan" }));
+      }
     });
 
     // Jalankan server
@@ -19,7 +21,7 @@ async function startServer() {
       console.log("Server running on port", port);
     });
   } catch (err) {
-    console.error("Failed to start application! :", err.message);
+    console.error("Failed to start application!:", err);
     process.exit(1);
   }
 }
