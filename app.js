@@ -1,6 +1,6 @@
 import http from "node:http";
 import { testDatabaseConnection } from "./src/config/dbConfig.js";
-import handleRoutes from "./src/routes/authenticationRoutes.js";
+import handleRoutes from "./src/routes/authRoutes.js";
 
 const port = process.env.PORT;
 
@@ -21,7 +21,7 @@ async function startServer() {
       console.log("Server running on port", port);
     });
   } catch (err) {
-    console.error("Failed to start application!:", err);
+    console.log(err)
     process.exit(1);
   }
 }
