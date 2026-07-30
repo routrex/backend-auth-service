@@ -3,8 +3,9 @@ import {
   logoutControllers,
   registerControllers,
 } from "../controllers/authControllers.js";
+import verifyToken from "../middleware/authMiddleware.js";
 
-const handleRoutes = (req, res) => {
+const handleRoutes = (req, res, next) => {
   const url = req.url;
 
   switch (url) {
@@ -26,15 +27,17 @@ const handleRoutes = (req, res) => {
       break;
     case "/api/auth/logout":
       if (req.method === "POST") {
-        logoutControllers(req, res);
+        verifyToken(req, res, () => {
+          logoutControllers(req, res);
+        });
       } else {
         res.writeHead(405, { "Content-Type": "text/plain" });
         res.end("Method Tidak diizinkan");
       }
       break;
     default:
-      res.writeHead(404, {"Content-Type": "text/plain" })
-      res.end("Route tidak ditemukan!")
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("Route tidak ditemukan!");
   }
 };
 

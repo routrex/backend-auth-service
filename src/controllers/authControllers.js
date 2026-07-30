@@ -66,7 +66,7 @@ export const loginControllers = (req, res) => {
       res.end(
         JSON.stringify({
           message: "Selamat Login Berhasil, Welcome!",
-          data: userData
+          data: userData,
         }),
       );
     } catch (err) {
@@ -81,10 +81,19 @@ export const loginControllers = (req, res) => {
 };
 
 export const logoutControllers = (req, res) => {
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(
-    JSON.stringify({
-      message: "Format data JSON tidak valid!",
-    }),
-  );
+  try {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        message: "Logout berhasil!",
+      }),
+    );
+  } catch (err) {
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        message: "Gagal Logout!",
+      }),
+    );
+  }
 };
