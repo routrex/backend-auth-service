@@ -3,7 +3,7 @@ import { connectMysql } from "../config/dbConfig.js";
 export const findByEmail = async (email) => {
   try {
     const query =
-      "SELECT full_name, email, password FROM users WHERE email = ?";
+      "SELECT id, full_name, email, password FROM users WHERE email = ?";
     const values = [email];
     const [result] = await connectMysql.execute(query, values);
 

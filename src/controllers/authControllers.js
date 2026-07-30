@@ -1,5 +1,8 @@
-import { registerServices } from "../services/authServices.js";
-import { registerValidation } from "../validations/authValidations.js";
+import { loginServices, registerServices } from "../services/authServices.js";
+import {
+  loginValidation,
+  registerValidation,
+} from "../validations/authValidations.js";
 
 export const registerControllers = (req, res) => {
   let data = [];
@@ -12,11 +15,11 @@ export const registerControllers = (req, res) => {
 
     try {
       const parseData = JSON.parse(bufferData);
-      const validationError = registerValidation(parseData);
+      const validationRegistr = registerValidation(parseData);
 
-      if (validationError) {
+      if (validationRegistr) {
         res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ message: validationError.message }));
+        res.end(JSON.stringify({ message: validationRegistr.message }));
         return;
       }
 
@@ -39,12 +42,42 @@ export const registerControllers = (req, res) => {
 };
 
 export const loginControllers = (req, res) => {
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(
-    JSON.stringify({
-      message: "Format data JSON tidak valid!",
-    }),
-  );
+  let data = [];
+
+  req.on("data", (user) => {
+    data.push(user);
+  });
+
+  req.on("end", async () => {
+    const bufferData = Buffer.concat(data).toString();
+
+    try {
+      const parseData = JSON.parse(bufferData);
+      const validationLogn = loginValidation(parseData);
+
+      if (validationLogn) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: validationLogn.message }));
+        return;
+      }
+
+      const userData = await loginServices(parseData);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          message: "Selamat Login Berhasil, Welcome!",
+          data: userData
+        }),
+      );
+    } catch (err) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          message: err.message,
+        }),
+      );
+    }
+  });
 };
 
 export const logoutControllers = (req, res) => {

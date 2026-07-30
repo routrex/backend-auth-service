@@ -30,3 +30,24 @@ export const registerValidation = (data) => {
     return new Error("Confirm password harus sama dengan password");
   }
 };
+
+export const loginValidation = (data) => {
+  const {email, password} = data
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email || email.trim() === "") {
+    return new Error("Email wajib diisi!");
+  }
+
+  if (!emailRegex.test(email)) {
+    return new Error("Format email tidak valid!");
+  }
+
+  if (!password || password.trim() === "") {
+    return new Error("Password wajib diisi!");
+  }
+
+  if (password.length < 6) {
+    return new Error("Password minimal harus 6 karakter!");
+  }
+};
