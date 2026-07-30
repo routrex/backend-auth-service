@@ -85,14 +85,14 @@ export const logoutControllers = (req, res) => {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
-        message: "Logout berhasil!",
+        message: "Logout successful!",
       }),
     );
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
-        message: "Gagal Logout!",
+        message: "Failed to log out!",
       }),
     );
   }
