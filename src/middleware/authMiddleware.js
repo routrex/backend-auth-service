@@ -8,7 +8,7 @@ const verifyToken = (req, res, next) => {
     res.writeHead(401, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
-        message: "Akses ditolak, token tidak ditemukan!",
+        message: "Access denied, token not found!",
       }),
     );
     return;
@@ -22,7 +22,7 @@ const verifyToken = (req, res, next) => {
     res.writeHead(401, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
-        message: "Token tidak valid atau sudah kedaluwarsa!",
+        message: "The token is invalid or has expired!",
       }),
     );
   }

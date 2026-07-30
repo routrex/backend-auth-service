@@ -5,39 +5,37 @@ import {
 } from "../controllers/authControllers.js";
 import verifyToken from "../middleware/authMiddleware.js";
 
-const handleRoutes = (req, res, next) => {
+const handleRoutes = (req, res) => {
   const url = req.url;
 
-  switch (url) {
-    case "/api/auth/register":
-      if (req.method === "POST") {
+  if (req.method === "POST") {
+    switch (url) {
+      case "/api/auth/register":
         registerControllers(req, res);
-      } else {
-        res.writeHead(405, { "Content-Type": "text/plain" });
-        res.end("Method Tidak diizinkan");
-      }
-      break;
-    case "/api/auth/login":
-      if (req.method === "POST") {
+        break;
+      case "/api/auth/login":
         loginControllers(req, res);
-      } else {
-        res.writeHead(405, { "Content-Type": "text/plain" });
-        res.end("Method Tidak diizinkan");
-      }
-      break;
-    case "/api/auth/logout":
-      if (req.method === "POST") {
+        break;
+      case "/api/auth/logout":
         verifyToken(req, res, () => {
           logoutControllers(req, res);
         });
-      } else {
-        res.writeHead(405, { "Content-Type": "text/plain" });
-        res.end("Method Tidak diizinkan");
-      }
-      break;
-    default:
-      res.writeHead(404, { "Content-Type": "text/plain" });
-      res.end("Route tidak ditemukan!");
+        break;
+      default:
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: "Route not found!",
+          }),
+        );
+    }
+  } else {
+    res.writeHead(405, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        message: "Method not allowed!",
+      }),
+    );
   }
 };
 

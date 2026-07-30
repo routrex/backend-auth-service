@@ -27,7 +27,7 @@ export const registerControllers = (req, res) => {
       res.writeHead(201, { "Content-Type": "application/json" });
       res.end(
         JSON.stringify({
-          message: "Selamat Registrasi Berhasil, Silahkan login!",
+          message: "Registration successful. Please log in!",
         }),
       );
     } catch (err) {
@@ -65,7 +65,7 @@ export const loginControllers = (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(
         JSON.stringify({
-          message: "Selamat Login Berhasil, Welcome!",
+          message: "Login successful, Welcome",
           data: userData,
         }),
       );

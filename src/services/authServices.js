@@ -1,4 +1,4 @@
-import bcryptjs, { hash } from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import { createUser, findByEmail } from "../repository/users.js";
 import jwt from "jsonwebtoken";
 
@@ -7,7 +7,7 @@ export const registerServices = async (data) => {
 
   const existingUser = await findByEmail(email);
   if (existingUser) {
-    throw new Error("Email sudah terdaftar!");
+    throw new Error("Email is already registered!");
   }
   const saltRound = 10;
   const hashedPassword = await bcryptjs.hash(password, saltRound);
@@ -27,7 +27,7 @@ export const loginServices = async (data) => {
   const existingUserLogn = await findByEmail(email);
 
   if (!existingUserLogn) {
-    throw new Error("Email tidak terdaftar !, Silahkan daftar dulu");
+    throw new Error("Email not registered. Please sign up first!");
   }
 
   const isMatchPassword = await bcryptjs.compare(
@@ -36,7 +36,7 @@ export const loginServices = async (data) => {
   );
 
   if (!isMatchPassword) {
-    throw new Error("Password salah !, Masukan password dengan benar");
+    throw new Error("Incorrect password. Please enter the correct password!");
   }
 
   const tokenPayload = {

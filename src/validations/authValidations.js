@@ -3,31 +3,31 @@ export const registerValidation = (data) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!full_name || full_name.trim() === "") {
-    return new Error("Nama wajib diisi!");
+    return new Error("Name is required!");
   }
 
   if (!email || email.trim() === "") {
-    return new Error("Email wajib diisi!");
+    return new Error("Email is required!");
   }
 
   if (!emailRegex.test(email)) {
-    return new Error("Format email tidak valid!");
+    return new Error("Invalid email format!");
   }
 
   if (!password || password.trim() === "") {
-    return new Error("Password wajib diisi!");
+    return new Error("Password is required!");
   }
 
   if (password.length < 6) {
-    return new Error("Password minimal harus 6 karakter!");
+    return new Error("Password must be at least 6 characters long!");
   }
 
   if (!confirm_password || confirm_password.trim() === "") {
-    return new Error("Confirm password wajib diisi!");
+    return new Error("Confirm password is required!");
   }
 
   if (password != confirm_password) {
-    return new Error("Confirm password harus sama dengan password");
+    return new Error("Confirm password must match the password");
   }
 };
 
@@ -36,18 +36,14 @@ export const loginValidation = (data) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!email || email.trim() === "") {
-    return new Error("Email wajib diisi!");
+    return new Error("Email is required!");
   }
 
   if (!emailRegex.test(email)) {
-    return new Error("Format email tidak valid!");
+    return new Error("Invalid email format!");
   }
 
   if (!password || password.trim() === "") {
-    return new Error("Password wajib diisi!");
-  }
-
-  if (password.length < 6) {
-    return new Error("Password minimal harus 6 karakter!");
+    return new Error("Password is required!");
   }
 };

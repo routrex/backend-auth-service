@@ -8,12 +8,7 @@ async function startServer() {
   try {
     await testDatabaseConnection();
     const server = http.createServer((req, res) => {
-      const handleAuthRoutes = handleRoutes(req, res);
-
-      if (handleAuthRoutes) {
-        res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ message: "Route tidak ditemukan" }));
-      }
+       handleRoutes(req, res);
     });
 
     // Jalankan server
