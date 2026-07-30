@@ -18,6 +18,10 @@ export const registerValidation = (data) => {
     return new Error("Password wajib diisi!");
   }
 
+  if (password.length < 6) {
+    return new Error("Password minimal harus 6 karakter!");
+  }
+
   if (!confirm_password || confirm_password.trim() === "") {
     return new Error("Confirm password wajib diisi!");
   }
@@ -28,7 +32,7 @@ export const registerValidation = (data) => {
 };
 
 export const loginValidation = (data) => {
-  const {email, password} = data
+  const { email, password } = data;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!email || email.trim() === "") {
