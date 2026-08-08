@@ -1,144 +1,207 @@
 # Authentication API
 
-Backend Basic Authentication API untuk menangani proses registrasi, login, logout, dan autentikasi pengguna.
+A backend Authentication API for handling user registration, login, logout, and authentication.
 
-Project ini dibuat menggunakan Node.js Native HTTP Module tanpa menggunakan framework backend seperti Express.js
+This project is built using **Node.js Native HTTP Module** without using backend frameworks such as Express.js.
 
-## Fitur
+Docker and Docker Compose are used to containerize and run the Node.js application.
 
-* Registrasi pengguna
-* Login pengguna
-* Logout pengguna
+## Features
 
-## Autentikasi & Keamanan
+* User registration
+* User login
+* User logout
 
-* Password hashing menggunakan `bcryptjs`
-* Autentikasi berbasis JSON Web Token (JWT)
-* JWT token memiliki masa berlaku selama 1 jam
-* Middleware untuk memverifikasi JWT token
-* Akses endpoint yang dilindungi menggunakan Bearer Token
-* Password tidak disimpan dalam bentuk plain text
+## Authentication & Security
+
+* Password hashing using `bcryptjs`
+* JSON Web Token (JWT) based authentication
+* JWT tokens expire after 1 hour
+* Middleware for JWT token verification
+* Protected endpoints using Bearer Token authentication
+* Passwords are never stored in plain text
 
 ## Tech Stack
 
 * Node.js v24
 * Native HTTP Module (`node:http`)
 * MySQL
+* Docker
+* Docker Compose
 
 ## Libraries
 
-* `mysql2` — Menghubungkan aplikasi Node.js dengan database MySQL
-* `bcryptjs` — Melakukan hashing dan perbandingan password
-* `jsonwebtoken` — Membuat dan memverifikasi JWT token
-* `dotenv` — Mengelola environment variable
+* `mysql2` — Connects the Node.js application to MySQL
+* `bcryptjs` — Handles password hashing and password comparison
+* `jsonwebtoken` — Creates and verifies JWT tokens
+* `dotenv` — Manages environment variables
 
 ## Development & Testing Tools
 
-* Laragon — Menjalankan MySQL pada lingkungan development lokal
-* `nodemon` — Menjalankan ulang server secara otomatis ketika terjadi perubahan code
-* Postman — Melakukan pengujian endpoint API
+* Docker Desktop — Runs the Node.js application in a container
+* Docker Compose — Manages the application container
+* `nodemon` — Automatically restarts the server during local development
+* Postman — Tests API endpoints
+* Git & GitHub — Version control and repository management
 
-## Instalasi & Konfigurasi
+## Docker Architecture
 
-### Prasyarat
+The current Docker setup containerizes the Node.js application, while the MySQL database is still running on the local development environment.
 
-Pastikan perangkat telah terinstal:
-
-* Node.js v24
-* npm
-* Laragon
-* Postman
-
-> Project ini dikembangkan dan diuji menggunakan Node.js v24 serta MySQL yang dijalankan melalui Laragon.
-
-### 1. Clone Repository
-
-Clone repository ini ke komputer lokal:
-
-```bash id="k7m0qu"
-git clone <repository-url>
+```text
+┌─────────────────────────────────┐
+│          Docker Compose         │
+│                                 │
+│  ┌───────────────────────────┐  │
+│  │         auth-app          │  │
+│  │         Node.js           │  │
+│  │         Port 3000         │  │
+│  └─────────────┬─────────────┘  │
+└────────────────┼────────────────┘
+                 │
+                 │ Database Connection
+                 ▼
+        MySQL Local Environment
 ```
 
-### 2. Masuk ke Direktori Project
+Docker Compose is currently used to build and run the Node.js application container.
 
-```bash id="m2cd6r"
+The MySQL database is not containerized yet and is still running in the local development environment.
+
+## Installation & Configuration
+
+### Prerequisites
+
+Make sure the following tools are installed:
+
+* Git
+* Node.js v24
+* npm
+* Docker Desktop
+* MySQL
+* Postman
+
+Make sure Docker Desktop and MySQL are running before starting the application.
+
+### 1. Clone the Repository
+
+```bash
+git clone <authentication-jwt>
+```
+
+### 2. Navigate to the Project Directory
+
+```bash
 cd <Authentication-API>
 ```
 
 ### 3. Install Dependencies
 
-Install seluruh package yang dibutuhkan:
+For local development, install the project dependencies:
 
-```bash id="iopw8g"
+```bash
 npm install
 ```
 
-### 4. Jalankan MySQL melalui Laragon
+> Dependencies are also installed automatically when the Docker image is built.
 
-Buka aplikasi Laragon, kemudian jalankan service MySQL.
+### 4. Configure MySQL
 
-Pastikan service MySQL sudah aktif sebelum menjalankan aplikasi Node.js.
+Create a MySQL database named:
 
-### 5. Konfigurasi Database
-
-Buat database MySQL dengan nama:
-
-```sql id="vljubg"
+```sql
 CREATE DATABASE authentication;
 ```
 
-Kemudian gunakan database tersebut:
+Select the database:
 
-```sql id="3cliwv"
+```sql
 USE authentication;
 ```
 
-Buat tabel `users`:
+Create the `users` table:
 
-```sql id="q4tnzq"
+```sql
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   full_name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  confirm_password VARCHAR(255),
+  email VARCHAR(55) NOT NULL UNIQUE,
+  password VARCHAR(100) NOT NULL,
+  confirm_password VARCHAR(100),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
-### 6. Konfigurasi Environment Variables
+### 5. Configure Environment Variables
 
-Buat file `.env` pada root directory project.
+Create a `.env` file in the project root directory:
 
-Tambahkan environment variable berikut:
-
-```env id="96omzz"
+```env
 PORT=3000
 
-DB_HOST=localhost
-DB_USER=your_mysql_username
-DB_PASSWORD=your_mysql_password
+DB_HOST=<your-mysql-host>
+DB_USER=<your-mysql-username>
+DB_PASSWORD=<your-mysql-password>
 DB_NAME=authentication
 
-JWT_SECRET=your_jwt_secret_key
+JWT_SECRET=<your-jwt-secret>
 ```
 
-Sesuaikan nilai environment variable dengan konfigurasi MySQL yang digunakan.
+Configure the database variables according to your local MySQL setup.
 
+### 6. Run with Docker Compose
 
-### 7. Jalankan Aplikasi
+Build the Docker image and start the application container:
 
-Jalankan aplikasi dalam mode development:
+```bash
+docker compose up --build
+```
 
-```bash id="t2hytj"
+To run the container in detached mode:
+
+```bash
+docker compose up -d --build
+```
+
+The API will be available at:
+
+```text
+http://localhost:3000
+```
+
+### 7. Check the Container
+
+```bash
+docker compose ps
+```
+
+You can also use:
+
+```bash
+docker ps
+```
+
+### 8. Stop the Container
+
+```bash
+docker compose down
+```
+
+## Running Without Docker
+
+The application can also be run directly using Node.js during local development.
+
+Make sure MySQL is running locally, then configure the `.env` file.
+
+Run the application in development mode:
+
+```bash
 npm run dev
 ```
 
-Jika server dan database berhasil terhubung, terminal akan menampilkan informasi bahwa database telah terhubung dan server sedang berjalan.
+The API will be available at:
 
-Server dapat diakses melalui:
-
-```text id="qct6l2"
+```text
 http://localhost:3000
 ```
 
@@ -146,21 +209,21 @@ http://localhost:3000
 
 Base URL:
 
-```text id="6r0f9g"
+```text
 http://localhost:3000
 ```
 
-### 1. Registrasi Pengguna
+### 1. Register User
 
 **Endpoint**
 
-```http id="6f5g8f"
+```http
 POST /api/auth/register
 ```
 
 **Request Body**
 
-```json id="a6y8bo"
+```json
 {
   "full_name": "John Doe",
   "email": "johndoe@example.com",
@@ -169,38 +232,38 @@ POST /api/auth/register
 }
 ```
 
-**Response Berhasil**
+**Successful Response**
 
 Status Code: `201 Created`
 
-```json id="h8pd41"
+```json
 {
   "message": "Registration successful. Please log in!"
 }
 ```
 
-### 2. Login Pengguna
+### 2. Login User
 
 **Endpoint**
 
-```http id="1h68vc"
+```http
 POST /api/auth/login
 ```
 
 **Request Body**
 
-```json id="c7a0f9"
+```json
 {
   "email": "johndoe@example.com",
   "password": "password123"
 }
 ```
 
-**Response Berhasil**
+**Successful Response**
 
 Status Code: `200 OK`
 
-```json id="0rw0rt"
+```json
 {
   "message": "Login successful, Welcome",
   "data": {
@@ -214,63 +277,63 @@ Status Code: `200 OK`
 }
 ```
 
-Simpan JWT token yang diterima dari proses login untuk digunakan pada endpoint yang membutuhkan autentikasi.
+Save the JWT token returned from the login process and use it for endpoints that require authentication.
 
-### 3. Logout Pengguna
+### 3. Logout User
 
 **Endpoint**
 
-```http id="plg7y6"
+```http
 POST /api/auth/logout
 ```
 
-Endpoint ini membutuhkan JWT token yang masih valid.
+This endpoint requires a valid JWT token.
 
 **Request Header**
 
-```http id="b3rn56"
+```http
 Authorization: Bearer <jwt-token>
 ```
 
-**Response Berhasil**
+**Successful Response**
 
 Status Code: `200 OK`
 
-```json id="tf7o0u"
+```json
 {
   "message": "Logout successful!"
 }
 ```
 
-## Alur Autentikasi
+## Authentication Flow
 
-```text id="ggrltt"
-Registrasi Pengguna
-        ↓
-Data registrasi divalidasi
-        ↓
-Password di-hash menggunakan bcryptjs
-        ↓
-Data pengguna disimpan ke MySQL
-        ↓
-Login Pengguna
-        ↓
-Email dan password diverifikasi
-        ↓
-JWT token dibuat
-        ↓
-JWT token dikirim kepada client
-        ↓
-Client mengirimkan token melalui Authorization Header
-        ↓
-Middleware memverifikasi JWT token
-        ↓
-Client dapat mengakses endpoint yang dilindungi
+```text
+User Registration
+       ↓
+Validate registration data
+       ↓
+Hash password using bcryptjs
+       ↓
+Store user data in MySQL
+       ↓
+User Login
+       ↓
+input email and password
+       ↓
+Generate JWT token
+       ↓
+Return JWT token to client
+       ↓
+Client sends token through Authorization Header
+       ↓
+Middleware verifies JWT token
+       ↓
+Client can access protected endpoints
 ```
 
-## Struktur Project
+## Project Structure
 
-```text id="p9hj1x"
+```text
 .
 ├── src/
 │   ├── config/
@@ -289,28 +352,82 @@ Client dapat mengakses endpoint yang dilindungi
 │   │   └── authServices.js
 │   └── validations/
 │       └── authValidation.js
+├── .gitignore
 ├── .env
+├── Dockerfile
+├── docker-compose.yml
 ├── app.js
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
 
-## Catatan
+## Docker Commands
 
-* JWT token memiliki masa berlaku selama 1 jam.
-* Password disimpan dalam bentuk hash dan tidak disimpan sebagai plain text.
-* Endpoint logout membutuhkan JWT token yang valid.
-* Project ini menggunakan Node.js Native HTTP Module dan tidak menggunakan framework backend seperti Express.js.
-* MySQL dijalankan menggunakan Laragon pada lingkungan development lokal.
-* Project ini dikembangkan dan diuji menggunakan Node.js v24.
+### Build the Image
 
-## Pengembangan Selanjutnya
+```bash
+docker compose build
+```
 
-Beberapa fitur yang dapat ditambahkan pada pengembangan berikutnya:
+### Start the Application
 
-* Forgot password
-* Reset password
-* Email verification
-* Refresh token
-* Role-based authorization
+```bash
+docker compose up
+```
 
+### Start in Detached Mode
+
+```bash
+docker compose up -d
+```
+
+### Rebuild and Start
+
+```bash
+docker compose up --build
+```
+
+### View Running Containers
+
+```bash
+docker compose ps
+```
+
+### View Logs
+
+```bash
+docker compose logs
+```
+
+To view logs from the `auth-app` service:
+
+```bash
+docker compose logs auth-app
+```
+
+### Stop the Application
+
+```bash
+docker compose down
+```
+
+## Notes
+
+* JWT tokens expire after 1 hour.
+* Passwords are stored as hashes and are never stored in plain text.
+* The logout endpoint requires a valid JWT token.
+* The application uses Node.js Native HTTP Module instead of a backend framework such as Express.js.
+* Docker Compose is currently used to containerize the Node.js application.
+* MySQL is currently running outside Docker in the local development environment.
+* Environment variables are used to manage application and database configuration.
+* The project was developed and tested using Node.js v24.
+
+## Future Improvements
+
+Potential improvements for future development:
+
+* Add refresh token support
+* Add forgot password functionality
+* Add email verification
+* Add role-based authorization
